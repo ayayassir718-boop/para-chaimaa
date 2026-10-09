@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PARA CHAÏMAA | Parapharmacie en Ligne N°1 au Maroc - Sté SAGFARMA</title>
+  <meta name="description" content="Para Chaïmaa - Votre parapharmacie de référence au Maroc (Sté SAGFARMA). Produits dermatologiques 100% authentiques, La Roche-Posay, CeraVe, Vichy, SVR. Livraison express partout au Maroc et paiement à la livraison.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/static/images/favicon.png">
+  <link rel="shortcut icon" href="/static/images/favicon.ico">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            para: {
+              green: '#0d3b2e',
+              'green-dark': '#08281f',
+              'green-light': '#155543',
+              gold: '#c59b4c',
+              'gold-light': '#e2c176',
+              'gold-dark': '#a27b32',
+              cream: '#fbfaf7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-[#fbfaf7] text-gray-800 antialiased selection:bg-[#c59b4c] selection:text-white">
+
+  <!-- ==================== TOP ANNOUNCEMENT BAR ==================== -->
+  <div class="top-bar py-2 px-4 text-xs font-medium">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center gap-2 text-center sm:text-left">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>🌿 <strong>PARA CHAÏMAA</strong> (Sté : SAGFARMA) • Livraison express 24-48h partout au Maroc • <strong>Offerte dès 350 DH</strong> !</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="https://wa.me/212661000000" target="_blank" class="hover:text-[#c59b4c] flex items-center gap-1 transition">
+          <span>💬 Pharmacien WhatsApp :</span>
+          <span class="font-bold">+212 6 61 00 00 00</span>
+        </a>
+        <span class="text-emerald-700">|</span>
+        <a href="/admin" class="hover:text-[#c59b4c] transition flex items-center gap-1">
+          <span>🔐 Back-Office Admin</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN HEADER ==================== -->
+  <header class="header-glass">
+    <div class="max-w-7xl mx-auto px-4 py-3 sm:py-4">
+      <div class="flex items-center justify-between gap-4">
+        
+        <!-- Brand Logo (Featuring user's uploaded logo) -->
+        <a href="/" class="flex items-center gap-3 group shrink-0">
+          <img src="/static/images/logo-transparent.png" alt="Para Chaïmaa Logo" class="h-14 sm:h-16 w-auto object-contain transition group-hover:scale-102" onerror="this.src='/static/images/logo.jpg'">
+          <div class="hidden lg:block border-l border-gray-200 pl-3">
+            <span class="text-[10px] font-bold tracking-widest text-[#c59b4c] uppercase block">PARAPHARMACIE HAUTE GAMME</span>
+            <span class="text-xs text-gray-500 font-medium">Sté : SAGFARMA • Casablanca</span>
+          </div>
+        </a>
+
+        <!-- Search Bar with Live Autocomplete -->
+        <div class="flex-1 max-w-xl mx-2 relative">
+          <div class="relative flex items-center">
+            <input 
+              type="text" 
+              id="main-search-input"
+              oninput="handleSearchInput(this.value)"
+              onkeydown="if(event.key === 'Enter') executeSearch()"
+              placeholder="Rechercher un soin, marque (CeraVe, La Roche-Posay, SVR...)..." 
+              class="w-full bg-gray-50 hover:bg-white focus:bg-white text-sm pl-11 pr-24 py-2.5 rounded-full border border-gray-200 focus:border-[#0d3b2e] focus:ring-2 focus:ring-[#0d3b2e]/10 outline-none transition"
+            >
+            <div class="absolute left-3.5 text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <button onclick="executeSearch()" class="absolute right-1.5 px-4 py-1.5 bg-[#0d3b2e] hover:bg-[#155543] text-white text-xs font-semibold rounded-full transition">
+              Chercher
+            </button>
+          </div>
+
+          <!-- Live autocomplete dropdown -->
+          <div id="search-autocomplete" class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50"></div>
+        </div>
+
+        <!-- Header Actions: Prescription, Wishlist & Cart -->
+        <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+          
+          <!-- Ordonnance Upload CTA -->
+          <button onclick="openPrescriptionModal()" class="hidden md:flex items-center gap-2 text-xs font-bold text-[#0d3b2e] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-full transition">
+            <span>📋</span>
+            <span>Envoyer Ordonnance</span>
+          </button>
+
+          <!-- Wishlist Trigger -->
+          <button onclick="openWishlistModal()" class="relative p-2.5 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-full transition" title="Mes Favoris">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            <span id="wishlist-badge-count" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[11px] font-bold rounded-full flex items-center justify-center" style="display: none;">0</span>
+          </button>
+
+          <!-- Cart Drawer Trigger -->
+          <button onclick="openCartDrawer()" class="btn-primary py-2 px-3.5 sm:px-4 text-xs font-bold shadow-md flex items-center gap-2">
+            <div class="relative">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              <span id="cart-badge-count" class="absolute -top-2 -right-2 w-4 h-4 bg-[#c59b4c] text-[#08281f] text-[10px] font-black rounded-full flex items-center justify-center" style="display: none;">0</span>
+            </div>
+            <span class="hidden sm:inline">Mon Panier</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Quick Navigation links -->
+      <nav class="hidden md:flex items-center justify-between pt-3 mt-2 border-t border-gray-100 text-xs font-semibold text-gray-700">
+        <div class="flex items-center gap-6">
+          <a href="#catalogue" onclick="selectCategory('all')" class="hover:text-[#0d3b2e] flex items-center gap-1.5 transition">✨ Tous nos Soins</a>
+          <a href="#catalogue" onclick="selectCategory('visage')" class="hover:text-[#0d3b2e] flex items-center gap-1.5 transition">🧴 Visage & Sérums</a>
+          <a href="#catalogue" onclick="selectCategory('solaire')" class="hover:text-[#0d3b2e] flex items-center gap-1.5 transition">☀️ Solaires SPF50+</a>
+          <a href="#catalogue" onclick="selectCategory('cheveux')" class="hover:text-[#0d3b2e] flex items-center gap-1.5 transition">💇‍♀️ Cheveux & Anti-Chute</a>
+          <a href="#catalogue" onclick="selectCategory('corps')" class="hover:text-[#0d3b2e] flex items-center gap-1.5 transition">🧼 Corps & Hygiène</a>
+          <a href="#catalogue" onclick="selectCategory('complements')" class="hover:text-[#0d3b2e] flex items-center gap-1.5 transition">💊 Compléments Bio</a>
+          <a href="#catalogue" onclick="selectCategory('bebe')" class="hover:text-[#0d3b2e] flex items-center gap-1.5 transition">👶 Maman & Bébé</a>
+          <a href="#catalogue" onclick="selectCategory('packs')" class="text-[#c59b4c] hover:text-[#a27b32] font-bold flex items-center gap-1.5 transition">🎁 Packs Éco -20%</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openSkinQuiz()" class="text-[#0d3b2e] bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 px-3 py-1 rounded-full text-xs font-bold transition flex items-center gap-1">
+            <span>✨</span>
+            <span>Diagnostic de Peau Gratuit</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== HERO LUXURY BANNER ==================== -->
+  <section class="hero-banner py-12 md:py-20 px-4">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- Left Content -->
+      <div class="lg:col-span-7 space-y-6 text-left">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-[#e2c176]">
+          <span>🌿</span>
+          <span>PARAPHARMACIE OFFICIELLE SAGFARMA</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+          Votre Santé & Beauté <br>
+          <span class="gold-gradient-text italic font-serif">Révélées au Naturel</span>
+        </h1>
+
+        <p class="text-emerald-100/90 text-sm sm:text-base max-w-xl leading-relaxed">
+          Bienvenue chez <strong>Para Chaïmaa</strong>. Découvrez les soins dermatologiques les plus recommandés au Maroc. 100% Produits Authentiques certifiés, conseils d'experts pharmaciens et livraison rapide à domicile.
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <a href="#catalogue" class="btn-gold text-sm px-6 py-3">
+            <span>Explorer le Catalogue</span>
+            <span>→</span>
+          </a>
+          <button onclick="openSkinQuiz()" class="btn-outline text-white border-white/40 hover:bg-white hover:text-[#0d3b2e] text-sm px-6 py-3">
+            <span>✨ Diagnostic de Peau (Quiz)</span>
+          </button>
+          <button onclick="openPrescriptionModal()" class="bg-white/15 hover:bg-white/25 text-white text-sm font-semibold px-5 py-3 rounded-full backdrop-blur-sm transition">
+            <span>📋 Ordonnance Rapide</span>
+          </button>
+        </div>
+
+        <!-- Trust Stats Badges -->
+        <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/15 max-w-lg">
+          <div>
+            <div class="text-xl sm:text-2xl font-black text-[#e2c176]">100%</div>
+            <div class="text-[11px] text-emerald-200/80 uppercase font-medium">Authentique Garanti</div>
+          </div>
+          <div>
+            <div class="text-xl sm:text-2xl font-black text-[#e2c176]">24-48h</div>
+            <div class="text-[11px] text-emerald-200/80 uppercase font-medium">Livraison Maroc</div>
+          </div>
+          <div>
+            <div class="text-xl sm:text-2xl font-black text-[#e2c176]">4.9 / 5</div>
+            <div class="text-[11px] text-emerald-200/80 uppercase font-medium">+10k Avis Clients</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Visual Feature Card -->
+      <div class="lg:col-span-5 relative">
+        <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl shadow-2xl relative">
+          
+          <!-- Image showcase -->
+          <div class="relative rounded-2xl overflow-hidden shadow-inner bg-gradient-to-tr from-[#0d3b2e] to-emerald-900 aspect-square flex items-center justify-center p-4">
+            <img src="/static/images/logo.jpg" alt="Para Chaïmaa" class="w-full h-full object-contain rounded-xl shadow-lg">
+            
+            <div class="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md p-3.5 rounded-xl border border-white/20 text-white flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-[#e2c176]">Sté : SAGFARMA</div>
+                <div class="text-xs text-gray-200">Parapharmacie Agréée au Maroc</div>
+              </div>
+              <a href="https://wa.me/212661000000" target="_blank" class="px-3 py-1.5 bg-[#25d366] text-white rounded-full text-xs font-bold flex items-center gap-1">
+                <span>WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Floating Micro Badges -->
+          <div class="absolute -top-3 -right-3 bg-white text-[#0d3b2e] px-4 py-2 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-2 text-xs font-black">
+            <span class="text-lg">⭐</span>
+            <div>
+              <div>Service Client 7j/7</div>
+              <div class="text-[10px] text-gray-500 font-normal">Conseils personnalisés</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== TRUST FEATURES STRIP ==================== -->
+  <section class="py-6 bg-white border-b border-gray-200 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+      
+      <div class="flex items-center gap-3 p-2">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center text-xl shrink-0">
+          🚚
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">Livraison Partout au Maroc</h4>
+          <p class="text-[11px] text-gray-500">Expédition 24h-48h à domicile</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-2">
+        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-800 flex items-center justify-center text-xl shrink-0">
+          💵
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">Paiement à la Livraison</h4>
+          <p class="text-[11px] text-gray-500">Payez en espèces à la réception</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-2">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center text-xl shrink-0">
+          🛡️
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">100% Authentique</h4>
+          <p class="text-[11px] text-gray-500">Direct des laboratoires officiels</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-2">
+        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-800 flex items-center justify-center text-xl shrink-0">
+          👩‍⚕️
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">Conseil Pharmacien</h4>
+          <p class="text-[11px] text-gray-500">SAGFARMA à votre écoute</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== FLASH SALES DEALS ==================== -->
+  <section class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flash-sale-card p-6 md:p-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-bold text-[#e2c176] uppercase tracking-wider mb-2">
+            <span>⚡</span> OFFRES FLASH DU JOUR
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Les Ventes Privilèges SAGFARMA</h2>
+          <p class="text-emerald-100 text-xs sm:text-sm max-w-lg">
+            Profitez de remises exclusives jusqu'à -30% sur les indispensables solaires, sérums réparateurs et cures anti-chute.
+          </p>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="text-xs font-bold text-emerald-200 uppercase tracking-widest mr-2 hidden sm:block">Fin de l'offre dans :</div>
+          
+          <div class="flash-timer-box">
+            <div id="flash-hours" class="text-xl sm:text-2xl font-black text-[#e2c176]">14</div>
+            <div class="text-[10px] uppercase text-emerald-200">Heures</div>
+          </div>
+          <span class="text-[#e2c176] font-bold text-xl">:</span>
+          <div class="flash-timer-box">
+            <div id="flash-minutes" class="text-xl sm:text-2xl font-black text-[#e2c176]">45</div>
+            <div class="text-[10px] uppercase text-emerald-200">Minutes</div>
+          </div>
+          <span class="text-[#e2c176] font-bold text-xl">:</span>
+          <div class="flash-timer-box">
+            <div id="flash-seconds" class="text-xl sm:text-2xl font-black text-[#e2c176]">20</div>
+            <div class="text-[10px] uppercase text-emerald-200">Secondes</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== INTERACTIVE SKIN QUIZ CALLOUT ==================== -->
+  <section class="max-w-7xl mx-auto px-4 py-4">
+    <div class="bg-gradient-to-r from-amber-50 via-emerald-50 to-amber-50 border border-amber-200 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-white shadow-md flex items-center justify-center text-3xl shrink-0">
+          ✨
+        </div>
+        <div>
+          <h3 class="text-lg md:text-xl font-bold text-[#0d3b2e]">Vous ne savez pas quel soin choisir pour votre peau ?</h3>
+          <p class="text-xs sm:text-sm text-gray-600 mt-1">
+            Répondez à 2 questions rapides et laissez nos pharmaciens composer votre routine sur-mesure avec <strong>-15% offerts</strong> sur le pack complet !
+          </p>
+        </div>
+      </div>
+      <button onclick="openSkinQuiz()" class="btn-primary shrink-0 text-xs sm:text-sm py-3 px-6 shadow-lg whitespace-nowrap">
+        <span>Lancer le Diagnostic Beauté</span>
+        <span>→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN CATALOG & FILTER SECTION ==================== -->
+  <main id="catalogue" class="max-w-7xl mx-auto px-4 py-10">
+    
+    <!-- Title & Controls -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+      <div>
+        <div class="text-xs font-bold text-[#c59b4c] uppercase tracking-wider mb-1">NOTRE CATALOGUE OFFICIEL</div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Explorez nos Soins d'Exception</h2>
+        <p id="products-count" class="text-xs text-gray-500 mt-1">Chargement des soins...</p>
+      </div>
+
+      <!-- Filters: Brand & Sorting -->
+      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        
+        <!-- Brand Select -->
+        <select id="brand-filter-select" onchange="handleBrandChange(this.value)" class="text-xs font-medium bg-white border border-gray-300 rounded-full px-4 py-2 outline-none focus:border-[#0d3b2e]">
+          <option value="all">Toutes les marques</option>
+        </select>
+
+        <!-- Sort Select -->
+        <select onchange="handleSortChange(this.value)" class="text-xs font-medium bg-white border border-gray-300 rounded-full px-4 py-2 outline-none focus:border-[#0d3b2e]">
+          <option value="popular">Trier par : Popularité</option>
+          <option value="price-asc">Prix : Moins cher au plus cher</option>
+          <option value="price-desc">Prix : Plus cher au moins cher</option>
+          <option value="rating">Meilleures évaluations</option>
+          <option value="newest">Nouveautés</option>
+        </select>
+
+        <!-- Reset Button -->
+        <button onclick="resetFilters()" class="text-xs text-gray-500 hover:text-[#0d3b2e] underline font-semibold px-2 py-1">
+          Réinitialiser
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Category Pills Navigation -->
+    <div id="category-pills-container" class="flex items-center gap-2.5 overflow-x-auto pb-4 mb-8 scrollbar-none">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- Products Responsive Grid -->
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Injected via JS -->
+    </div>
+
+  </main>
+
+  <!-- ==================== PRESCRIPTION CALLOUT BANNER ==================== -->
+  <section class="max-w-7xl mx-auto px-4 py-12">
+    <div class="bg-gradient-to-br from-[#08281f] to-[#0d3b2e] rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl">
+      <div class="max-w-2xl relative z-10 space-y-4">
+        <div class="inline-block px-3 py-1 bg-white/10 rounded-full text-xs font-bold text-[#e2c176]">
+          📋 SERVICE PHARMACEUTIQUE SUR-MESURE
+        </div>
+        <h3 class="text-2xl sm:text-3xl font-bold">Vous possédez une ordonnance ou une prescription de votre médecin ?</h3>
+        <p class="text-emerald-100 text-sm leading-relaxed">
+          Prenez-la simplement en photo avec votre téléphone ! Les pharmaciens qualifiés de la <strong>Sté SAGFARMA</strong> préparent minutieusement votre traitement et organisent votre livraison partout au Maroc.
+        </p>
+        <div class="pt-2">
+          <button onclick="openPrescriptionModal()" class="btn-gold text-sm py-3 px-8 shadow-xl">
+            <span>Télécharger mon Ordonnance</span>
+            <span>📷</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TESTIMONIALS SECTION ==================== -->
+  <section class="bg-white py-14 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center max-w-xl mx-auto mb-10">
+        <div class="text-xs font-bold text-[#c59b4c] uppercase tracking-wider mb-2">TÉMOIGNAGES CLIENTS</div>
+        <h3 class="text-2xl sm:text-3xl font-bold text-gray-900">La Confiance de nos Clientes au Maroc</h3>
+        <p class="text-xs sm:text-sm text-gray-500 mt-2">Plus de 10,000 commandes livrées avec soin et authenticité certifiée.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
+          <div class="flex text-amber-400 text-sm">★★★★★</div>
+          <p class="text-xs sm:text-sm text-gray-700 italic">
+            "Commande reçue en 24h à Casablanca avec des échantillons gratuits dans le colis ! Les produits La Roche-Posay sont 100% originaux. Je commanderai toujours chez Para Chaïmaa."
+          </p>
+          <div class="text-xs font-bold text-gray-900 pt-2 border-t border-gray-200">
+            Kenza L. • <span class="text-gray-400 font-normal">Casablanca</span>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
+          <div class="flex text-amber-400 text-sm">★★★★★</div>
+          <p class="text-xs sm:text-sm text-gray-700 italic">
+            "Le diagnostic de peau m'a vraiment orientée vers la routine parfaite pour mon acné. En 3 semaines ma peau est métamorphosée. Mention spéciale pour le service client sur WhatsApp !"
+          </p>
+          <div class="text-xs font-bold text-gray-900 pt-2 border-t border-gray-200">
+            Nawal B. • <span class="text-gray-400 font-normal">Rabat</span>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
+          <div class="flex text-amber-400 text-sm">★★★★★</div>
+          <p class="text-xs sm:text-sm text-gray-700 italic">
+            "Paiement à la livraison sans aucun souci à Marrakech. Emballage soigné avec du papier bulle pour protéger les crèmes. Les prix SAGFARMA sont imbattables."
+          </p>
+          <div class="text-xs font-bold text-gray-900 pt-2 border-t border-gray-200">
+            Driss M. • <span class="text-gray-400 font-normal">Marrakech</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-[#08281f] text-emerald-100/90 pt-16 pb-8 border-t border-emerald-950">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-emerald-900/60">
+      
+      <!-- Brand Info -->
+      <div class="space-y-4">
+        <img src="/static/images/logo-transparent.png" alt="Para Chaïmaa" class="h-16 w-auto bg-white/10 p-2 rounded-xl" onerror="this.src='/static/images/logo.jpg'">
+        <p class="text-xs text-emerald-200 leading-relaxed">
+          <strong>PARA CHAÏMAA</strong> (Sté : SAGFARMA). Votre parapharmacie en ligne de confiance au Maroc. Soins dermatologiques de pointe, santé et bien-être.
+        </p>
+        <div class="text-xs text-[#e2c176] font-semibold">
+          RC : Casablanca • Sté SAGFARMA
+        </div>
+      </div>
+
+      <!-- Categories Links -->
+      <div class="space-y-3 text-xs">
+        <h4 class="font-bold text-white uppercase tracking-wider text-sm">Catégories Phares</h4>
+        <ul class="space-y-2">
+          <li><a href="#catalogue" onclick="selectCategory('visage')" class="hover:text-white transition">Soins Visage & Anti-Imperfections</a></li>
+          <li><a href="#catalogue" onclick="selectCategory('solaire')" class="hover:text-white transition">Crèmes Solaires SPF50+</a></li>
+          <li><a href="#catalogue" onclick="selectCategory('cheveux')" class="hover:text-white transition">Cures & Shampoings Anti-Chute</a></li>
+          <li><a href="#catalogue" onclick="selectCategory('complements')" class="hover:text-white transition">Compléments Alimentaires Bio</a></li>
+          <li><a href="#catalogue" onclick="selectCategory('bebe')" class="hover:text-white transition">Gamme Pédiatrique Bébé</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Service -->
+      <div class="space-y-3 text-xs">
+        <h4 class="font-bold text-white uppercase tracking-wider text-sm">Service Client</h4>
+        <ul class="space-y-2">
+          <li><a href="https://wa.me/212661000000" target="_blank" class="hover:text-white transition">Assistance WhatsApp 7j/7</a></li>
+          <li><button onclick="openPrescriptionModal()" class="hover:text-white transition">Envoyer une Ordonnance</button></li>
+          <li><button onclick="openSkinQuiz()" class="hover:text-white transition">Diagnostic Routine de Peau</button></li>
+          <li><a href="/admin" class="hover:text-white transition">Administration & Back-Office</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="space-y-3 text-xs">
+        <h4 class="font-bold text-white uppercase tracking-wider text-sm">Coordonnées</h4>
+        <p>📍 Casablanca, Maroc</p>
+        <p>📞 +212 6 61 00 00 00</p>
+        <p>✉️ contact@parachaimaa.ma</p>
+        <div class="pt-2">
+          <span class="inline-block px-3 py-1 bg-emerald-900 rounded-full text-[11px] text-[#e2c176] font-bold">
+            Expédition Partout au Maroc 🇲🇦
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-emerald-400 gap-4">
+      <div>© 2026 <strong>Para Chaïmaa</strong> - Sté SAGFARMA. Tous droits réservés.</div>
+      <div class="flex items-center gap-4">
+        <span>Paiement sécurisé à la livraison</span>
+        <span>•</span>
+        <span>Produits 100% Originaux</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== CART SLIDE-OVER DRAWER ==================== -->
+  <div id="cart-backdrop" class="drawer-backdrop" onclick="closeCartDrawer()"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    
+    <!-- Header -->
+    <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+      <div class="flex items-center gap-2 font-bold text-gray-900 text-base">
+        <span>🛒 Mon Panier</span>
+      </div>
+      <button onclick="closeCartDrawer()" class="p-1.5 rounded-full hover:bg-gray-200 text-gray-500 transition">
+        ✕
+      </button>
+    </div>
+
+    <!-- Free shipping progress bar -->
+    <div class="p-4 bg-emerald-50/70 border-b border-emerald-100">
+      <div id="free-shipping-text" class="text-xs text-emerald-900 mb-2 font-medium text-center">
+        Ajoutez 350 DH pour la <strong>Livraison GRATUITE</strong> !
+      </div>
+      <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div id="free-shipping-progress" class="h-full bg-[#0d3b2e] transition-all duration-500" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Items List (Scrollable) -->
+    <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- Footer / Checkout details -->
+    <div class="p-4 border-t border-gray-200 bg-white space-y-3">
+      
+      <!-- Coupon Code Input -->
+      <div class="flex gap-2">
+        <input type="text" id="coupon-code-input" placeholder="Code Promo (ex: CHAIMAA10)" class="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-xs uppercase outline-none focus:border-[#0d3b2e]">
+        <button onclick="applyCoupon()" class="px-3 py-1.5 bg-gray-800 text-white rounded-lg text-xs font-bold hover:bg-black transition">
+          Appliquer
+        </button>
+      </div>
+
+      <!-- Pricing Summary -->
+      <div class="space-y-1.5 text-xs text-gray-600 pt-2 border-t border-gray-100">
+        <div class="flex justify-between">
+          <span>Sous-total :</span>
+          <span id="cart-subtotal" class="font-bold text-gray-900">0.00 DH</span>
+        </div>
+        <div id="cart-discount-row" class="flex justify-between text-emerald-700 font-bold hidden">
+          <span>Réduction appliquée :</span>
+          <span id="cart-discount">-0.00 DH</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Livraison estimée :</span>
+          <span id="cart-shipping" class="font-bold text-gray-900">25.00 DH</span>
+        </div>
+        <div class="flex justify-between text-base font-extrabold text-[#0d3b2e] pt-2 border-t border-gray-200">
+          <span>Total à payer :</span>
+          <span id="cart-total">0.00 DH</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-2 pt-2">
+        <button onclick="openCheckoutModal()" class="btn-primary w-full py-3 text-sm font-bold shadow-md">
+          <span>Passer la Commande (Paiement à la livraison)</span>
+          <span>→</span>
+        </button>
+        <button onclick="orderWholeCartViaWhatsApp()" class="btn-whatsapp w-full py-2.5 text-xs font-bold">
+          <span>Commander tout le Panier par WhatsApp</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== CHECKOUT MODAL ==================== -->
+  <div id="checkout-modal" class="modal-overlay">
+    <div class="modal-container p-6 md:p-8">
+      <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
+        <h3 class="text-xl font-bold text-[#0d3b2e]">Validation de votre Commande</h3>
+        <button onclick="closeModal('checkout-modal')" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+      </div>
+
+      <form id="checkout-form" onsubmit="submitOrder(event)" class="space-y-4">
+        
+        <!-- Summary of items -->
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
+          <div class="text-xs font-bold text-gray-700 uppercase">Récapitulatif de votre commande :</div>
+          <div id="checkout-items-list" class="space-y-1"></div>
+          <div class="pt-2 border-t border-gray-200 flex justify-between font-bold text-sm text-[#0d3b2e]">
+            <span>Total TTC :</span>
+            <span id="checkout-total">0.00 DH</span>
+          </div>
+        </div>
+
+        <!-- Customer Fields -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Nom & Prénom *</label>
+            <input type="text" id="checkout-name" required placeholder="Ex: Imane Alaoui" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Numéro de Téléphone *</label>
+            <input type="tel" id="checkout-phone" required placeholder="Ex: 06 61 23 45 67" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Ville de Livraison *</label>
+            <select id="checkout-city" onchange="renderCheckoutSummary()" required class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none bg-white">
+              <!-- Injected via JS -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Adresse de livraison complète *</label>
+            <input type="text" id="checkout-address" required placeholder="Quartier, Rue, N° d'appartement..." class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Note pour le livreur (Optionnel)</label>
+          <input type="text" id="checkout-notes" placeholder="Ex: Appeler avant de passer, après 16h..." class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none">
+        </div>
+
+        <!-- Payment Method -->
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-2">Mode de Paiement :</label>
+          <div class="space-y-2">
+            
+            <label class="flex items-center gap-3 p-3 border border-emerald-500 bg-emerald-50/50 rounded-xl cursor-pointer">
+              <input type="radio" name="payment_method" value="Paiement à la livraison" checked class="text-emerald-800">
+              <div class="text-xs">
+                <span class="font-bold text-gray-900">💵 Paiement en Espèces à la Livraison (Recommandé)</span>
+                <p class="text-gray-500 text-[11px]">Réglez votre commande directement au livreur à la réception de votre colis.</p>
+              </div>
+            </label>
+
+            <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="payment_method" value="Carte Bancaire" class="text-emerald-800">
+              <div class="text-xs">
+                <span class="font-bold text-gray-900">💳 Carte Bancaire (CMI / Visa / Mastercard)</span>
+                <p class="text-gray-500 text-[11px]">Paiement 100% sécurisé avec validation instantanée.</p>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <button type="submit" id="checkout-submit-btn" class="btn-primary w-full py-3.5 text-sm font-bold shadow-lg mt-4">
+          Confirmer ma Commande
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== ORDER SUCCESS MODAL ==================== -->
+  <div id="order-success-modal" class="modal-overlay">
+    <div class="modal-container p-6 sm:p-8 text-center max-w-md">
+      <div class="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center text-3xl">
+        🎉
+      </div>
+      <h3 class="text-2xl font-bold text-[#0d3b2e] mb-1">Commande Validée avec Succès !</h3>
+      <p class="text-xs text-gray-600 mb-4">Merci pour votre confiance en <strong>Para Chaïmaa</strong>.</p>
+
+      <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-left space-y-2 mb-6 text-xs">
+        <div class="flex justify-between">
+          <span class="text-gray-500">Numéro de Commande :</span>
+          <span id="success-order-num" class="font-bold text-[#0d3b2e]">ORD-XXXX</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Montant Total :</span>
+          <span id="success-order-total" class="font-extrabold text-gray-900">0.00 DH</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Statut :</span>
+          <span class="text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded">En préparation</span>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <a id="success-wa-btn" href="#" target="_blank" class="btn-whatsapp w-full py-3 text-xs font-bold block">
+          Confirmer rapidement sur WhatsApp
+        </a>
+        <button onclick="closeModal('order-success-modal')" class="btn-outline w-full py-2.5 text-xs font-bold">
+          Retourner à la boutique
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SKIN DIAGNOSTIC / QUIZ MODAL ==================== -->
+  <div id="skin-quiz-modal" class="modal-overlay">
+    <div class="modal-container p-6 md:p-8">
+      <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
+        <div>
+          <span class="text-xs font-bold text-[#c59b4c] uppercase">DIAGNOSTIC DERMATOLOGIQUE</span>
+          <h3 class="text-xl font-bold text-[#0d3b2e]">Votre Routine Personnalisée</h3>
+        </div>
+        <button onclick="closeModal('skin-quiz-modal')" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+      </div>
+
+      <!-- Question Form -->
+      <div id="quiz-questions-container" class="space-y-6">
+        <div>
+          <label class="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">1. Quel est votre type de peau ?</label>
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_skin_type" value="mixte" checked>
+              <span>Peau Mixte à Grasse</span>
+            </label>
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_skin_type" value="seche">
+              <span>Peau Sèche à Déshydratée</span>
+            </label>
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_skin_type" value="sensible">
+              <span>Peau Sensible & Réactive</span>
+            </label>
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_skin_type" value="normale">
+              <span>Peau Normale</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">2. Quelle est votre préoccupation principale ?</label>
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_concern" value="acne" checked>
+              <span>Boutons & Imperfections</span>
+            </label>
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_concern" value="taches">
+              <span>Taches brunes & Teint terne</span>
+            </label>
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_concern" value="rides">
+              <span>Rides & Perte de fermeté</span>
+            </label>
+            <label class="p-3 border rounded-xl flex items-center gap-2 cursor-pointer hover:bg-emerald-50">
+              <input type="radio" name="quiz_concern" value="deshydratation">
+              <span>Tiraillements & Sécheresse</span>
+            </label>
+          </div>
+        </div>
+
+        <button onclick="submitSkinQuiz()" class="btn-primary w-full py-3 text-xs font-bold">
+          Générer ma Routine & Bénéficier de -15%
+        </button>
+      </div>
+
+      <!-- Result Box -->
+      <div id="quiz-results-container" class="space-y-4 hidden">
+        <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs">
+          <div class="font-bold text-emerald-900 text-sm mb-1" id="routine-title">Routine Sur-Mesure</div>
+          <p class="text-emerald-800" id="routine-advice"></p>
+        </div>
+
+        <div id="routine-items-list" class="space-y-2"></div>
+
+        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-gray-500">Prix du pack (avec -15% de réduction) :</div>
+            <div class="flex items-baseline gap-2">
+              <span id="routine-total-price" class="text-lg font-black text-[#0d3b2e]">0 DH</span>
+              <span id="routine-orig-price" class="text-xs text-gray-400 line-through">0 DH</span>
+            </div>
+          </div>
+          <button id="add-routine-cart-btn" class="btn-primary py-2.5 px-4 text-xs font-bold">
+            Ajouter le Pack au Panier
+          </button>
+        </div>
+
+        <button onclick="resetSkinQuiz()" class="text-xs text-gray-500 hover:underline block mx-auto">
+          Refaire le test
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PRESCRIPTION UPLOAD MODAL ==================== -->
+  <div id="prescription-modal" class="modal-overlay">
+    <div class="modal-container p-6 md:p-8 max-w-lg">
+      <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
+        <div>
+          <span class="text-xs font-bold text-[#c59b4c] uppercase">SERVICE PHARMACIE</span>
+          <h3 class="text-xl font-bold text-[#0d3b2e]">Transmettre une Ordonnance</h3>
+        </div>
+        <button onclick="closeModal('prescription-modal')" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+      </div>
+
+      <form id="prescription-form" onsubmit="submitPrescription(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Votre Nom & Prénom *</label>
+          <input type="text" name="customer_name" required placeholder="Ex: Mouna Cherkaoui" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Numéro de Téléphone *</label>
+            <input type="tel" name="customer_phone" required placeholder="06 XX XX XX XX" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Ville</label>
+            <input type="text" name="customer_city" placeholder="Ex: Casablanca" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Photo ou Scan de l'Ordonnance *</label>
+          <input type="file" name="file" accept="image/*,.pdf" required class="w-full text-xs p-2 border border-dashed border-emerald-400 bg-emerald-50/50 rounded-lg">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Précisions ou questions éventuelles</label>
+          <textarea name="notes" rows="2" placeholder="Précisez un besoin particulier..." class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:border-[#0d3b2e] outline-none"></textarea>
+        </div>
+
+        <button type="submit" id="presc-submit-btn" class="btn-primary w-full py-3 text-xs font-bold shadow-md">
+          Transmettre mon ordonnance
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== PRODUCT DETAILS / QUICK VIEW MODAL ==================== -->
+  <div id="product-details-modal" class="modal-overlay">
+    <div class="modal-container p-6 md:p-8 max-w-2xl">
+      <div class="flex justify-between items-start pb-4 border-b border-gray-100">
+        <div>
+          <span id="modal-prod-brand" class="text-xs font-bold text-[#c59b4c] uppercase">MARQUE</span>
+          <h3 id="modal-prod-title" class="text-lg md:text-xl font-bold text-gray-900 mt-0.5">Titre du Produit</h3>
+        </div>
+        <button onclick="closeModal('product-details-modal')" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+        <div class="rounded-2xl overflow-hidden bg-gray-50 border border-gray-200 aspect-square flex items-center justify-center p-2">
+          <img id="modal-prod-img" src="" alt="Produit" class="w-full h-full object-cover rounded-xl">
+        </div>
+
+        <div class="space-y-4 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-baseline gap-2">
+                <span id="modal-prod-price" class="text-2xl font-black text-[#0d3b2e]">0 DH</span>
+                <span id="modal-prod-old-price" class="text-sm text-gray-400 line-through">0 DH</span>
+              </div>
+              <span id="modal-prod-stock" class="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full">En stock</span>
+            </div>
+
+            <div id="modal-prod-rating" class="text-xs text-amber-500 font-semibold mb-3">★ 4.9 (12 avis)</div>
+            <p id="modal-prod-desc" class="text-xs text-gray-600 leading-relaxed mb-4"></p>
+
+            <div class="space-y-2 text-xs border-t border-gray-100 pt-3">
+              <div><strong class="text-gray-800">Ingrédients actifs :</strong> <span id="modal-prod-ingredients" class="text-gray-500"></span></div>
+              <div><strong class="text-gray-800">Conseils d'application :</strong> <span id="modal-prod-usage" class="text-gray-500"></span></div>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-4">
+            <div class="flex gap-2">
+              <input type="number" id="modal-qty-input" value="1" min="1" max="10" class="w-16 text-center border border-gray-300 rounded-lg text-xs font-bold">
+              <button id="modal-add-cart-btn" class="btn-primary flex-1 py-2.5 text-xs font-bold">Ajouter au Panier</button>
+            </div>
+            <button id="modal-whatsapp-btn" class="btn-whatsapp w-full py-2.5 text-xs font-bold">Commander sur WhatsApp</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Reviews Tabs -->
+      <div class="border-t border-gray-100 pt-4">
+        <h4 class="text-xs font-bold text-gray-800 uppercase tracking-wider mb-3">Avis Clients Vérifiés</h4>
+        <div id="modal-reviews-list" class="space-y-2 max-h-36 overflow-y-auto mb-4"></div>
+
+        <!-- Add Review Form -->
+        <form id="review-form" onsubmit="submitReview(event)" class="bg-gray-50 p-3 rounded-xl border border-gray-200 text-xs space-y-2">
+          <div class="font-bold text-gray-700">Donner votre avis :</div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="review-author" required placeholder="Votre nom" class="p-2 border rounded bg-white">
+            <select id="review-rating" class="p-2 border rounded bg-white font-bold text-amber-500">
+              <option value="5">★★★★★ (5/5)</option>
+              <option value="4">★★★★☆ (4/5)</option>
+              <option value="3">★★★☆☆ (3/5)</option>
+            </select>
+          </div>
+          <textarea id="review-comment" required rows="2" placeholder="Partagez votre expérience avec ce soin..." class="w-full p-2 border rounded bg-white"></textarea>
+          <button type="submit" class="px-4 py-1.5 bg-[#0d3b2e] text-white rounded font-bold hover:bg-[#155543]">Publier mon avis</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== WISHLIST MODAL ==================== -->
+  <div id="wishlist-modal" class="modal-overlay">
+    <div class="modal-container p-6 md:p-8 max-w-xl">
+      <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
+        <h3 class="text-xl font-bold text-[#0d3b2e]">Mes Soins Favoris (Wishlist)</h3>
+        <button onclick="closeModal('wishlist-modal')" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+      </div>
+      <div id="wishlist-items-container" class="space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- ==================== FLOATING WHATSAPP BUTTON ==================== -->
+  <div class="floating-whatsapp">
+    <div class="whatsapp-bubble">
+      Besoin d'un conseil ? Notre pharmacien SAGFARMA est en ligne !
+    </div>
+    <a href="https://wa.me/212661000000?text=Salam%20Para%20Chaïmaa,%20j'ai%20besoin%20d'un%20conseil%20pharmaceutique." target="_blank" class="whatsapp-icon-btn" title="Discuter avec notre pharmacien">
+      <div class="whatsapp-pulse"></div>
+      <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M12.031 2C6.5 2 2 6.5 2 12.031c0 1.95.55 3.77 1.51 5.31L2 22l4.82-1.48c1.48.88 3.2 1.39 5.21 1.39 5.53 0 10.03-4.5 10.03-10.03C22.06 6.5 17.56 2 12.031 2zm0 18.25c-1.74 0-3.36-.5-4.73-1.37l-.34-.22-3.13.96.97-3.04-.24-.37c-.98-1.42-1.54-3.12-1.54-4.96 0-4.56 3.71-8.27 8.28-8.27 4.56 0 8.27 3.71 8.27 8.27 0 4.56-3.71 8.27-8.27 8.27zm4.53-6.19c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.98-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.24-.74-.66-1.24-1.47-1.38-1.72-.14-.25-.01-.39.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.08 0 1.22.89 2.41 1.02 2.58.12.17 1.76 2.68 4.25 3.76.59.26 1.06.41 1.42.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.3z"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Client Application Scripts -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

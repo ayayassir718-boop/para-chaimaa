@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Back-Office Administration | PARA CHAÏMAA (Sté SAGFARMA)</title>
+  
+  <link rel="icon" type="image/png" href="/static/images/favicon.png">
+  <link rel="shortcut icon" href="/static/images/favicon.ico">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            para: {
+              green: '#0d3b2e',
+              'green-dark': '#08281f',
+              'green-light': '#155543',
+              gold: '#c59b4c'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Top Navigation -->
+  <header class="bg-[#08281f] text-white border-b border-emerald-950 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="/static/images/logo-transparent.png" alt="Para Chaïmaa" class="h-10 w-auto bg-white/10 p-1 rounded-lg" onerror="this.src='/static/images/logo.jpg'">
+        <div>
+          <h1 class="text-base font-bold text-white leading-tight">PARA CHAÏMAA • BACK-OFFICE</h1>
+          <p class="text-[10px] text-[#e2c176] font-semibold">Plateforme de Gestion SAGFARMA</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4 text-xs font-semibold">
+        <a href="/" class="px-3.5 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition flex items-center gap-1.5">
+          <span>🛍️</span>
+          <span>Voir la Boutique</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+    
+    <!-- KPI STATS CARDS -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Chiffre d'Affaires</div>
+        <div id="stat-revenue" class="text-xl font-black text-[#0d3b2e]">0 DH</div>
+        <div class="text-[10px] text-emerald-700 font-bold mt-1">Commandes validées</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Total Commandes</div>
+        <div id="stat-orders" class="text-xl font-black text-gray-900">0</div>
+        <div class="text-[10px] text-gray-400 mt-1">Toutes périodes</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">En Attente</div>
+        <div id="stat-pending" class="text-xl font-black text-amber-600">0</div>
+        <div class="text-[10px] text-amber-600 font-semibold mt-1">À confirmer vite</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Total Produits</div>
+        <div id="stat-products" class="text-xl font-black text-gray-900">0</div>
+        <div class="text-[10px] text-gray-400 mt-1">En catalogue</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Alerte Stock</div>
+        <div id="stat-low-stock" class="text-xl font-black text-red-600">0</div>
+        <div class="text-[10px] text-red-500 font-semibold mt-1">Stock ≤ 5 unités</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Ordonnances</div>
+        <div id="stat-prescriptions" class="text-xl font-black text-blue-600">0</div>
+        <div class="text-[10px] text-blue-500 font-semibold mt-1">À traiter</div>
+      </div>
+
+    </div>
+
+    <!-- ORDERS MANAGEMENT -->
+    <section class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-gray-900">Gestion des Commandes Clients</h2>
+          <p class="text-xs text-gray-500">Mettez à jour les statuts d'expédition et contactez les acheteurs en 1 clic.</p>
+        </div>
+
+        <!-- Filter buttons -->
+        <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-semibold">
+          <button onclick="renderAdminOrders('all')" class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700">Toutes</button>
+          <button onclick="renderAdminOrders('En attente')" class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800">En attente</button>
+          <button onclick="renderAdminOrders('Confirmée')" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800">Confirmées</button>
+          <button onclick="renderAdminOrders('Expédiée')" class="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800">Expédiées</button>
+          <button onclick="renderAdminOrders('Livrée')" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800">Livrées</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 text-[11px] font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+              <th class="p-4">Réf. Commande</th>
+              <th class="p-4">Client & Contact</th>
+              <th class="p-4">Articles & Paiement</th>
+              <th class="p-4">Total</th>
+              <th class="p-4">Statut Actuel</th>
+              <th class="p-4">Date</th>
+              <th class="p-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRODUCTS MANAGEMENT -->
+    <section class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-gray-900">Catalogue des Soins & Produits</h2>
+          <p class="text-xs text-gray-500">Ajoutez, modifiez ou ajustez les stocks de vos produits en ligne.</p>
+        </div>
+        <button onclick="openAddProductModal()" class="btn-primary text-xs py-2 px-4 shadow-sm">
+          + Ajouter un Nouveau Soin
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 text-[11px] font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+              <th class="p-4">Photo</th>
+              <th class="p-4">Produit & Marque</th>
+              <th class="p-4">Prix</th>
+              <th class="p-4">Stock</th>
+              <th class="p-4">Badge</th>
+              <th class="p-4">Action</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRESCRIPTIONS MANAGEMENT -->
+    <section class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-gray-100">
+        <h2 class="text-lg font-bold text-gray-900">Ordonnances Médicales Transmises</h2>
+        <p class="text-xs text-gray-500">Photos d'ordonnances envoyées par vos clients pour préparation de commande.</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 text-[11px] font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+              <th class="p-4">Nom Client</th>
+              <th class="p-4">Téléphone / Ville</th>
+              <th class="p-4">Document & Notes</th>
+              <th class="p-4">Date de Réception</th>
+              <th class="p-4">Action</th>
+            </tr>
+          </thead>
+          <tbody id="prescriptions-table-body">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ADD / EDIT PRODUCT MODAL -->
+  <div id="product-modal" class="modal-overlay">
+    <div class="modal-container p-6 md:p-8 max-w-xl">
+      <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
+        <h3 id="product-modal-title" class="text-lg font-bold text-[#0d3b2e]">Ajouter un Nouveau Soin</h3>
+        <button onclick="closeAdminModal('product-modal')" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+      </div>
+
+      <form id="product-form" onsubmit="saveProductForm(event)" class="space-y-4">
+        <input type="hidden" id="edit-product-id">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Titre du Produit *</label>
+            <input type="text" id="prod-title" required class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Marque *</label>
+            <input type="text" id="prod-brand" required placeholder="Ex: La Roche-Posay" class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Catégorie *</label>
+            <select id="prod-category" required class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none bg-white">
+              <option value="visage">Soins Visage</option>
+              <option value="solaire">Protection Solaire</option>
+              <option value="cheveux">Cheveux & Anti-Chute</option>
+              <option value="corps">Corps & Hygiène</option>
+              <option value="complements">Compléments Alimentaires</option>
+              <option value="bebe">Maman & Bébé</option>
+              <option value="packs">Packs Promo</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Prix (DH) *</label>
+            <input type="number" step="0.5" id="prod-price" required class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Ancien Prix (DH)</label>
+            <input type="number" step="0.5" id="prod-old-price" placeholder="Optionnel" class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Stock disponible</label>
+            <input type="number" id="prod-stock" value="25" class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Badge (Ex: Promo, Best-Seller)</label>
+            <input type="text" id="prod-badge" placeholder="Optionnel" class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">URL de la Photo *</label>
+          <input type="url" id="prod-image" required placeholder="https://..." class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Description *</label>
+          <textarea id="prod-desc" required rows="2" class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Ingrédients clés</label>
+            <input type="text" id="prod-ingredients" class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Conseils d'utilisation</label>
+            <input type="text" id="prod-usage" class="w-full text-xs p-2.5 border rounded-lg focus:border-[#0d3b2e] outline-none">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary w-full py-3 text-xs font-bold mt-2">
+          Enregistrer le Produit
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bg-gray-200 text-gray-600 text-xs py-4 text-center border-t border-gray-300">
+    Administration SAGFARMA • Para Chaïmaa © 2026
+  </footer>
+
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>
